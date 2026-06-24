@@ -1,0 +1,30 @@
+{
+  "name": "gtb-solicitacao-de-compras",
+  "version": "1.0.0",
+  "description": "Solução corporativa integrada para pedidos de sorvetes e abertura automatizada de incidentes no **InvGate Service Desk** utilizando **SAML SSO** via **Supabase**.",
+  "homepage": "https://github.com/joshua-igor/gtb-solicitacao-de-compras#readme",
+  "bugs": {
+    "url": "https://github.com/joshua-igor/gtb-solicitacao-de-compras/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joshua-igor/gtb-solicitacao-de-compras.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.108.2",
+    "next": "^16.2.9",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  }
+}
