@@ -17,6 +17,7 @@ export function Sidebar({ userEmail }: SidebarProps) {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    localStorage.removeItem('sso_bypass_user');
     router.push('/login');
   };
 

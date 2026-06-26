@@ -19,6 +19,18 @@ interface SubmitOrderPayload {
 
 export async function submitOrderToInvGate(payload: SubmitOrderPayload) {
   try {
+    const bypassActive = process.env.BYPASS_API_REQUEST === 'true';
+    if (bypassActive) {
+      console.log("InvGate API Request Bypass is active. Bypassing request creation.");
+      const mockTicketNumber = Math.floor(1000 + Math.random() * 9000);
+      return {
+        success: true,
+        ticketId: `#${mockTicketNumber}`,
+        bypassActive: true,
+        message: 'Pedido submetido com sucesso ao Service Desk!'
+      };
+    }
+
     const baseUrl = process.env.INVGATE_BASE_URL;
     const tokenUrl = process.env.INVGATE_ACCESS_TOKEN_URL;
     const clientId = process.env.INVGATE_CLIENT_ID;

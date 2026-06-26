@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { AlertCircle, Loader2, ArrowRight } from 'lucide-react';
+import { getSSOBypassStatus } from '@/app/actions/bypass';
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
@@ -16,6 +17,14 @@ export default function LoginPage() {
     const ssoDomain = process.env.NEXT_PUBLIC_SAML_DOMAIN || 'ogrupothebest.com.br';
 
     try {
+      const bypassStatus = await getSSOBypassStatus();
+      if (bypassStatus.bypassSSO) {
+        console.log(`SSO Bypass is active. Logging in with hardcoded account: ${bypassStatus.bypassEmail}`);
+        localStorage.setItem('sso_bypass_user', bypassStatus.bypassEmail);
+        window.location.href = '/';
+        return;
+      }
+
       // Trigger Supabase corporate Auth via SAML 2.0 Identity Provider
       const { data, error } = await supabase.auth.signInWithSSO({
         domain: ssoDomain,

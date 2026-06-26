@@ -7,6 +7,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { Combobox } from '@/components/ui/combobox';
 import { submitOrderToInvGate } from '@/app/actions/submit-order';
 import { ShoppingBag, Trash2, Info, AlertCircle, Loader2, CheckCircle2 } from 'lucide-react';
+import { getSSOBypassStatus } from '@/app/actions/bypass';
 
 interface CartItem {
   product: Product;
@@ -38,6 +39,16 @@ export default function OrderPage() {
   // Verify Supabase SSO user authentication
   useEffect(() => {
     async function checkAuth() {
+      const bypassStatus = await getSSOBypassStatus();
+      if (bypassStatus.bypassSSO) {
+        console.log(`SSO Bypass is active. Logged in as: ${bypassStatus.bypassEmail}`);
+        setUser({ email: bypassStatus.bypassEmail });
+        setLoadingUser(false);
+        return;
+      }
+
+      // Clear bypass indicator if bypass not active
+      localStorage.removeItem('sso_bypass_user');
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         // Enforce SSO login redirect
@@ -169,6 +180,9 @@ export default function OrderPage() {
     setIsSubmitting(false);
 
     if (response.success) {
+      if ((response as any).bypassActive) {
+        console.log("InvGate API Request Bypass is active. Request was not sent, simulated HTTP 200/Success.");
+      }
       setAlertState({
         type: 'success',
         message: `Pedido solicitado com sucesso! Chamado ${response.ticketId} aberto no InvGate.`
